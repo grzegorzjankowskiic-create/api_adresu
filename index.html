@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje IP i Lokalizacja</title>
+    <style>
+        body { 
+            font-family: sans-serif; 
+            background-color: #1a365d;
+            color: white; 
+            padding: 20px; 
+        }
+        .container { 
+            background-color: #2b6cb0; 
+            padding: 20px; 
+            border-radius: 5px; 
+            max-width: 500px; 
+        }
+        .data-row { 
+            margin-bottom: 10px; 
+            font-size: 1.1em;
+        }
+        .label { 
+            display: inline-block;
+            width: 150px;
+            color: #e2e8f0;
+        }
+        .value {
+            font-weight: bold;
+        }
+        #status {
+            color: #fbd38d;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Szczegóły Twojego połączenia:</h2>
+        
+        <div id="status">Pobieranie danych (JSONP)...</div>
+        
+        <div id="ip-data" style="display: none;">
+            <div class="data-row">
+                <span class="label">Adres IP:</span> 
+                <span class="value" id="ip"></span>
+            </div>
+            <div class="data-row">
+                <span class="label">Dostawca (ISP):</span> 
+                <span class="value" id="isp"></span>
+            </div>
+            <div class="data-row">
+                <span class="label">Miasto:</span> 
+                <span class="value" id="city"></span>
+            </div>
+            <div class="data-row">
+                <span class="label">Region:</span> 
+                <span class="value" id="region"></span>
+            </div>
+            <div class="data-row">
+                <span class="label">Kraj:</span> 
+                <span class="value" id="country"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funkcja zwrotna, którą wywoła zewnętrzne API po załadowaniu skryptu
+        function getIP(data) {
+            document.getElementById('status').style.display = 'none';
+            document.getElementById('ip-data').style.display = 'block';
+
+            document.getElementById('ip').textContent = data.ip;
+            document.getElementById('isp').textContent = data.organization || "Nieznany";
+            document.getElementById('city').textContent = data.city || "Nieznane";
+            document.getElementById('region').textContent = data.region || "Nieznany";
+            document.getElementById('country').textContent = data.country || "Nieznany";
+        }
+
+        // Tworzymy element <script>, który omija blokady CORS
+        var script = document.createElement('script');
+        script.src = 'https://get.geojs.io/v1/ip/geo.js'; // Stabilne API z obsługą JSONP
+        document.getElementsByTagName('head')[0].appendChild(script);
+    </script>
+
+</body>
+</html>
